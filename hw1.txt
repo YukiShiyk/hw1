@@ -1,0 +1,230 @@
+第一题：
+close all;clear all;clc;
+[IM, map] = imread('7.bmp','bmp');
+im_size  = size(IM)
+im_class = class(IM)
+
+第二题：
+
+close all;clear all;clc;
+I=imread('lena.bmp');%导入图像“lena.bmp”
+figure(1)
+imshow(I);
+title('image of 8 bits');%显示k=8的原图像
+[x,y]=size(I);%读取图像“lena.bmp”的长宽
+img7=zeros(x,y);%产生一个名为img7的512X512的0矩阵
+img6=zeros(x,y);
+img5=zeros(x,y);
+img4=zeros(x,y);
+img3=zeros(x,y);
+img2=zeros(x,y);
+img1=zeros(x,y);
+for i=1:x
+    for j=1:y
+        img7(i,j)=floor(I(i,j)/2);%将原图像的每个像素的灰度级除以2，并用函数floor进行下取整
+    end
+end
+figure(2)
+imshow((img7),[0,127]);
+title('image of 7 bits');
+for i=1:x
+    for j=1:y
+        img6(i,j)=floor(img7(i,j)/2);%将原图像的每个像素的灰度级除以2，并用函数floor进行下取整
+    end
+end
+figure(3)
+imshow((img6),[0,63]);
+title('image of 6 bits');
+for i=1:x
+    for j=1:y
+        img5(i,j)=floor(img6(i,j)/2);%将原图像的每个像素的灰度级除以2，并用函数floor进行下取整
+    end
+end
+figure(4)
+imshow((img5),[0,31]);
+title('image of 5 bits');
+for i=1:x
+    for j=1:y
+        img4(i,j)=floor(img5(i,j)/2);%将原图像的每个像素的灰度级除以2，并用函数floor进行下取整
+    end
+end
+figure(5)
+imshow((img4),[0,15]);
+title('image of 4 bits');
+for i=1:x
+    for j=1:y
+        img3(i,j)=floor(img4(i,j)/2);%将原图像的每个像素的灰度级除以2，并用函数floor进行下取整
+    end
+end
+figure(6)
+imshow((img3),[0,7]);
+title('image of 3 bits');
+for i=1:x
+    for j=1:y
+        img2(i,j)=floor(img3(i,j)/2);%将原图像的每个像素的灰度级除以2，并用函数floor进行下取整
+    end
+end
+figure(7)
+imshow((img2),[0,3]);
+title('image of 2 bits');
+for i=1:x
+    for j=1:y
+        img1(i,j)=floor(img2(i,j)/2);%将原图像的每个像素的灰度级除以2，并用函数floor进行下取整
+    end
+end
+figure(8)
+imshow((img1),[0,1]);
+title('image of 1 bits')
+
+第三题：
+
+% 求一副灰度图像的均值
+close all;
+clear;
+clc;
+i=imread('lena.bmp'); %载入图像
+i=double(i);  %将uint8型转换为double型，否则不能计算统计量
+avg1=mean(i,1); %列向量均值
+avg2=mean(i,2); %行向量均值
+avg3=mean(i); %列向量均值
+[m,n]=size(i);
+s=0;
+for x=1:m
+    for y=1:n
+        s=s+i(x,y); %求像素值总和 s
+    end
+end
+%所有像素均值
+a1=mean(mean(i)); %第一种方法：先计算列向量均值，再求总均值。
+a2=mean2(i); %第二种方法：用函数mean2求总均值
+a3=s/(m*n);  %第三种方法：按公式计算，像素值总和除以像素个数。
+a4=sum(sum(i))/(m*n); %第四种方法：也是按公式计算，但是用sum来求像素值总和。
+% 求一副灰度图像的方差
+close all
+clear
+clc;
+i=imread('lena.bmp'); %载入图像
+i=double(i);  %将uint8型转换为double型，否则不能计算统计量
+% sq1=var(i,0,1); %列向量方差，第二个参数为0，表示方差公式分子下面是n-1,如果为1则是n
+% sq2=var(i,0,2); %行向量方差
+avg=mean2(i);  %求图像均值
+[m,n]=size(i);
+s=0;
+for x=1:m
+    for y=1:n
+    s=s+(i(x,y)-avg)^2; %求得所有像素与均值的平方和。
+    end
+end
+%求图像的方差
+avg1=var(i(:)); %第一种方法：利用函数var求得。
+avg2=s/(m*n-1); %第二种方法：利用方差公式求得
+avg3=(std2(i))^2; %第三种方法：利用std2求得标准差，再平方即为方差。
+
+第四题：
+
+close all;clear all;clc;
+I=imread('lena.bmp');%读取图像
+IN=imresize(I,[2018,2048],'nearest');
+IB=imresize(I,[2048,2048],'bilinear');
+IC=imresize(I,[2048,2048],'bicubic');
+subplot(2,2,1);
+imshow(I);
+title('(a) 原图像');
+subplot(2,2,2);
+imshow(IN);
+title('(b) 最近邻内插法所得图像');
+subplot(2,2,3);
+imshow(IB);
+title('(c) 双线性内插法所得图像');
+subplot(2,2,4);
+imshow(IC);
+title('(d) 双三次内插法所得图像')
+
+第五题：
+
+【水平偏移变换】
+
+close all;clear all;clc;
+I1=imread('lena.bmp');
+I2=imread('elain1.bmp');
+T=[1 1.5 0;0 1 0;0 0 1];
+tform=maketform('affine',T);
+I11=imtransform(I1,tform);
+I1N=imresize(I11,[2048 2048],'nearest');
+I1B=imresize(I11,[2048 2048],'bilinear');
+I1C=imresize(I11,[2048 2048],'bicubic');
+I22=imtransform(I2,tform);
+I2N=imresize(I22,[2048 2048],'nearest');
+I2B=imresize(I22,[2048 2048],'bilinear');
+I2C=imresize(I22,[2048 2048],'bicubic');
+figure(1);
+subplot(2,2,1);
+imshow(I11);
+title('(a) lena水平shear');
+subplot(2,2,2);
+imshow(I1N);
+title('(b) 最近邻内插法所得图像');
+subplot(2,2,3);
+imshow(I1B);
+title('(c) 双线性内插法所得图像');
+subplot(2,2,4);
+imshow(I1C);
+title('(d) 双三次内插法所得图像')
+figure(2);
+subplot(2,2,1);
+imshow(I22);
+title('(a) elain水平shear');
+subplot(2,2,2);
+imshow(I2N);
+title('(b) 最近邻内插法所得图像');
+subplot(2,2,3);
+imshow(I2B);
+title('(c) 双线性内插法所得图像');
+subplot(2,2,4);
+imshow(I2C);
+title('(d) 双三次内插法所得图像')
+
+【旋转变换】
+
+
+close all;clear all;clc;
+I1=imread('lena.bmp');
+I2=imread('elain1.bmp');
+T=[cosd(30) sind(30) 0;-sind(30) cos(30) 0;0 0 1];
+tform=maketform('affine',T);
+I11=imtransform(I1,tform);
+I1N=imresize(I11,[2048 2048],'nearest');
+I1B=imresize(I11,[2048 2048],'bilinear');
+I1C=imresize(I11,[2048 2048],'bicubic');
+I22=imtransform(I2,tform);
+I2N=imresize(I22,[2048 2048],'nearest');
+I2B=imresize(I22,[2048 2048],'bilinear');
+I2C=imresize(I22,[2048 2048],'bicubic');
+figure(1);
+subplot(2,2,1);
+imshow(I11);
+title('(a) lena旋转30°');
+subplot(2,2,2);
+imshow(I1N);
+title('(b) 最近邻内插法所得图像');
+subplot(2,2,3);
+imshow(I1B);
+title('(c) 双线性内插法所得图像');
+subplot(2,2,4);
+imshow(I1C);
+title('(d) 双三次内插法所得图像')
+figure(2);
+subplot(2,2,1);
+imshow(I22);
+title('(a) elain旋转30°');
+subplot(2,2,2);
+imshow(I2N);
+title('(b) 最近邻内插法所得图像');
+subplot(2,2,3);
+imshow(I2B);
+title('(c) 双线性内插法所得图像');
+subplot(2,2,4);
+imshow(I2C);
+title('(d) 双三次内插法所得图像')
+
+
